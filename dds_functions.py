@@ -1,3 +1,17 @@
+# sandingtaman
+# 81051123
+
+# sukamantri
+# 88080845 
+
+# mekarwangi
+# 80061023
+
+# rajadesa
+# sirnabaya 83091356
+# tanjungsari 84121472
+# sukaharja 86090139
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
@@ -9,8 +23,8 @@ import hashlib
 import pyautogui
 import time as t
 from openpyxl import load_workbook
-kecamatan = 'panjalu'
-desa = 'sandingtaman'
+kecamatan = 'sukamantri'
+desa = 'mekarwangi'
 part = '2'
 wb = load_workbook(filename='list/'+kecamatan+'/'+desa+'/list_'+desa+'_'+part+'.xlsx',data_only=True)
 sheet = wb['Sheet1']
