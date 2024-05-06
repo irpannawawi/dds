@@ -25,9 +25,12 @@ import time as t
 from openpyxl import load_workbook
 kecamatan = 'sukamantri'
 desa = 'mekarwangi'
-part = '2'
-wb = load_workbook(filename='list/'+kecamatan+'/'+desa+'/list_'+desa+'_'+part+'.xlsx',data_only=True)
-sheet = wb['Sheet1']
+part = '1'
+row_start=32
+row_number = 60
+delay_on_select_tag = 7
+# wb = load_workbook(filename='list/'+kecamatan+'/'+desa+'/list_'+desa+'_'+part+'.xlsx',data_only=True)
+# sheet = wb['Sheet1']
 
 options = Options() 
 
@@ -75,60 +78,68 @@ def expand_element():
     select_el('//*[@id="form_dds_warga"]/div[3]/span').click()
     select_el('//*[@id="form_dds_warga"]/div[2]/span').click()
     select_el('//*[@id="form_dds_warga"]/div[1]/span').click()
-    t.sleep(1)
+    t.sleep(1/6)
 
-def fill_form_kepala_keluarga(nama, dusun, rt, rw,desa, kecamatan):
+def fill_form_kepala_keluarga(nama, dusun, rt, rw, desa, kecamatan):
     # set nama
     try:
-        select_el_byId('nama_kepala_keluarga').send_keys(nama)
-        select_el_byId('detail_alamat_kepala_keluarga').send_keys(dusun)
-        # kosongkan rt rw
+        try:
+            select_el_byId('nama_kepala_keluarga').send_keys(nama)
+            select_el_byId('detail_alamat_kepala_keluarga').send_keys(dusun)
+            # kosongkan rt rw
 
-        select_el_byId('rt_kepala_keluarga').send_keys(Keys.BACKSPACE)
-        select_el_byId('rt_kepala_keluarga').send_keys(rt)
-        select_el_byId('rw_kepala_keluarga').send_keys(Keys.BACKSPACE)
-        select_el_byId('rw_kepala_keluarga').send_keys(rw)
+            select_el_byId('rt_kepala_keluarga').send_keys(Keys.BACKSPACE)
+            select_el_byId('rt_kepala_keluarga').send_keys(rt)
+            select_el_byId('rw_kepala_keluarga').send_keys(Keys.BACKSPACE)
+            select_el_byId('rw_kepala_keluarga').send_keys(rw)
 
-        # select provinsi
-        set_select('//*[@id="provinsi"]', 'JAWA BARAT')
-        # select kabupaten
-        wait_until('//*[@id="3207"]')
-        set_select('//*[@id="kabupaten"]', 'KABUPATEN CIAMIS')
+            # select provinsi
+            set_select('//*[@id="provinsi"]', 'JAWA BARAT')
+            # select kabupaten
+            wait_until('//*[@id="3207"]')
+            set_select('//*[@id="kabupaten"]', 'KABUPATEN CIAMIS')
+        except:
+            print('gagal set nama kepala')
 
-        # select KECAMATAN
-        if(kecamatan=='rajadesa'):
-            kode_kec='320713'
-        elif kecamatan=='panjalu':
-            kode_kec='320708'
-        elif kecamatan=='sukamantri':
-            kode_kec='320733'
+        try:
+            # select KECAMATAN
+            if(kecamatan=='rajadesa'):
+                kode_kec='320713'
+            elif kecamatan=='panjalu':
+                kode_kec='320708'
+            elif kecamatan=='sukamantri':
+                kode_kec='320733'
 
-        xpath = '//*[@id="'+kode_kec+' "]'
-        wait_until(xpath)
-        set_select('//*[@id="kecamatan"]', kecamatan.upper())
+            xpath = '//*[@id="'+kode_kec+' "]'
+            wait_until(xpath)
+            set_select('//*[@id="kecamatan"]', kecamatan.upper())
+        except:
+            print('gagal set kecamatan')
+            
+        try:
+            # select desa
+            kode_ds = 0
+            if(desa.lower()=='tanjungsari'):
+                kode_ds = 3207132003
 
-        # select desa
-        if(desa.lower()=='tanjungsari'):
-            kode_ds = 3207132003
+            elif desa.lower() == 'sukaharja':
+                kode_ds = 3207132006
 
-        elif desa.lower() == 'sukaharja':
-            kode_ds = 3207132006
+            elif desa.lower() == 'sirnabaya':
+                kode_ds = 3207132009
 
-        elif desa.lower() == 'sirnabaya':
-            kode_ds = 3207132009
+            elif desa.lower() == 'sukamantri':
+                kode_ds = 3207332001
 
-        elif desa.lower() == 'sukamantri':
-            kode_ds = 3207332001
-
-        elif desa.lower() == 'sandingtaman':
-            kode_ds = 3207082004
-
-        elif desa.lower() == 'mekarwangi':
-            kode_ds = 3207332005
-
-        wait_until('//*[@id="'+str(kode_ds)+'"]')
-        set_select('//*[@id="desa"]', desa)
-
+            elif desa.lower() == 'sandingtaman':
+                kode_ds = 3207082004
+            else:
+                kode_ds = 3207332005
+            wait_until('//*[@id="'+str(kode_ds)+'"]')
+            set_select('//*[@id="desa"]', desa)
+        except:
+            print('gagal set desa')
+        
         # isi dusun rt rw
         select_el('//*[@id="detail_alamat"]').send_keys(dusun)
         select_el('//*[@id="rt"]').send_keys(rt)
@@ -169,9 +180,9 @@ def fill_pendapat_warga(keterangan):
         # fill keyword
         # selectKeyword = select_el('//*[@id="wrapper-keluhan-warga"]/div[3]/span/span[1]').click()
         pyautogui.moveTo(100, 800)
-        t.sleep(1)
+        t.sleep(1/6)
         pyautogui.click()
-        t.sleep(1)
+        t.sleep(500/2000)
         pyautogui.scroll(10000)
         pyautogui.scroll(-1400)
         pyautogui.moveTo(300, 800)
@@ -179,7 +190,7 @@ def fill_pendapat_warga(keterangan):
         pyautogui.press('tab')
         pyautogui.press('tab')
         pyautogui.write('Ekonomi')
-        t.sleep(8)
+        t.sleep(delay_on_select_tag)
         wait_until('//*[@id="select2-keyword_keluhan-results"]/li[1]')
         select_el('//*[@id="select2-keyword_keluhan-results"]/li[1]').click()
     except:
@@ -207,15 +218,15 @@ def fill_deteksi_dini(keterangan):
 # ********************** end function *****************************
 t_all1 = t.time()
 
-i=2
-while i <= 46 :
+i=row_start
+while i <= row_number+1 :
     t1 = t.time()
     tanggal = sheet['B' + str(i)].value
     nama = sheet['C' + str(i)].value
     dusun = sheet['D' + str(i)].value
     rt = str(sheet['E' + str(i)].value)
     rw = str(sheet['F' + str(i)].value)
-    desa = sheet['G' + str(i)].value
+    desa = desa.capitalize()
     k = sheet['H' + str(i)].value
     i+=1
     # step 1 - relace keterangan
